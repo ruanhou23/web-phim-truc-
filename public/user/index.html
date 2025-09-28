@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NhanPhim - Trang Web Xem Phim</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo">NhanPhim</div>
+        
+        <!-- Navigation Menu -->
+        <nav class="main-nav">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" data-page="home">TRANG CHỦ</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link" data-page="genres">THỂ LOẠI</a>
+                    <div class="dropdown-menu">
+                        <a href="#" data-genre="action">Hành Động</a>
+                        <a href="#" data-genre="comedy">Hài Hước</a>
+                        <a href="#" data-genre="drama">Tâm Lý</a>
+                        <a href="#" data-genre="horror">Kinh Dị</a>
+                        <a href="#" data-genre="romance">Lãng Mạn</a>
+                        <a href="#" data-genre="sci-fi">Khoa Học Viễn Tưởng</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link" data-page="countries">QUỐC GIA</a>
+                    <div class="dropdown-menu">
+                        <a href="#" data-country="korea">Hàn Quốc</a>
+                        <a href="#" data-country="china">Trung Quốc</a>
+                        <a href="#" data-country="japan">Nhật Bản</a>
+                        <a href="#" data-country="thailand">Thái Lan</a>
+                        <a href="#" data-country="vietnam">Việt Nam</a>
+                        <a href="#" data-country="america">Mỹ</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="new-movies">PHIM MỚI</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="series">PHIM BỘ</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="movies">PHIM LẺ</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="dubbed">PHIM THUYẾT MINH</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="cinema">PHIM CHIẾU RẠP</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="tv-show">TV SHOW</a>
+                </li>
+            </ul>
+        </nav>
+        
+        <div class="search-bar">
+            <input type="text" placeholder="Tìm kiếm phim..." id="search-input">
+        </div>
+        <div class="user-actions">
+            <a href="auth.html" class="login-btn">Đăng nhập</a>
+            <a href="auth.html" class="register-btn">Đăng ký</a>
+        </div>
+        
+        <!-- Mobile Menu Toggle -->
+        <div class="mobile-menu-toggle" id="mobile-menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav" id="mobile-nav">
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="#" class="nav-link active" data-page="home">TRANG CHỦ</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a href="#" class="nav-link" data-page="genres">THỂ LOẠI</a>
+                <div class="dropdown-menu">
+                    <a href="#" data-genre="action">Hành Động</a>
+                    <a href="#" data-genre="comedy">Hài Hước</a>
+                    <a href="#" data-genre="drama">Tâm Lý</a>
+                    <a href="#" data-genre="horror">Kinh Dị</a>
+                    <a href="#" data-genre="romance">Lãng Mạn</a>
+                    <a href="#" data-genre="sci-fi">Khoa Học Viễn Tưởng</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a href="#" class="nav-link" data-page="countries">QUỐC GIA</a>
+                <div class="dropdown-menu">
+                    <a href="#" data-country="korea">Hàn Quốc</a>
+                    <a href="#" data-country="china">Trung Quốc</a>
+                    <a href="#" data-country="japan">Nhật Bản</a>
+                    <a href="#" data-country="thailand">Thái Lan</a>
+                    <a href="#" data-country="vietnam">Việt Nam</a>
+                    <a href="#" data-country="america">Mỹ</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-page="new-movies">PHIM MỚI</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-page="series">PHIM BỘ</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-page="movies">PHIM LẺ</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-page="dubbed">PHIM THUYẾT MINH</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-page="cinema">PHIM CHIẾU RẠP</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-page="tv-show">TV SHOW</a>
+            </li>
+        </ul>
+    </nav>
+
+    <main>
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>Lệnh Trừng Phạt</h1>
+                <p>Nội dung tóm tắt của bộ phim nổi bật.</p>
+                <a href="#" class="play-button">► Xem Phim</a>
+            </div>
+        </section>
+        
+        <div class="main-content-wrapper">
+            <div class="container">
+            <div class="ad-banner">
+                <img src="https://placehold.co/970x90/e50914/FFFFFF?text=ADVERTISEMENT" alt="Advertisement">
+            </div>
+
+            <section class="quick-filters">
+                <button class="filter-btn" data-category="marvel">Marvel</button>
+                <button class="filter-btn" data-category="4k">4K</button>
+                <button class="filter-btn" data-category="sitcom">Sitcom</button>
+                <button class="filter-btn" data-category="dubbed">Lồng Tiếng</button>
+                <button class="filter-btn" data-category="time-travel">Xuyên Không</button>
+                <button class="filter-btn" data-category="historical">Cổ Trang</button>
+            </section>
+            
+            <section class="movie-category">
+                <h2 class="category-title">Phim Hàn Quốc mới</h2>
+                <div class="movie-list" id="korean-movies">
+                    <!-- Movies will be loaded dynamically -->
+                </div>
+            </section>
+
+            <section class="movie-category">
+                <h2 class="category-title">Phim Trung Quốc mới</h2>
+                <div class="movie-list" id="chinese-movies">
+                    <!-- Movies will be loaded dynamically -->
+                </div>
+            </section>
+
+            <div class="ad-banner">
+                <img src="https://placehold.co/970x90/e50914/FFFFFF?text=ADVERTISEMENT" alt="Advertisement">
+            </div>
+
+            <section class="movie-category">
+                <h2 class="category-title">Phim (Điện Ảnh Mới Cập Nhật)</h2>
+                <div class="movie-list" id="latest-movies">
+                    <!-- Movies will be loaded dynamically -->
+                </div>
+            </section>
+            
+            <section class="movie-category">
+                <h2 class="category-title">Bảng Xếp Hạng</h2>
+                <div class="movie-list top-ranked-list" id="top-ranked-movies">
+                    <!-- Top ranked movies will be loaded dynamically -->
+                </div>
+            </section>
+            </div>
+            
+            <!-- Trending Sidebar -->
+            <aside class="trending-sidebar">
+                <div class="trending-container">
+                    <div class="trending-header">
+                        <h2>TRENDING</h2>
+                    </div>
+
+                    <div class="trending-tabs">
+                        <div class="tab active">Ngày</div>
+                        <div class="tab">Tuần</div>
+                        <div class="tab">Tháng</div>
+                    </div>
+
+                    <ol class="trending-list">
+                        <li class="trending-item">
+                            <span class="item-rank">1</span>
+                            <div class="item-info">
+                                <p class="item-title">Hãy Để Tôi Tỏa Sáng</p>
+                                <p class="item-views">1 lượt quan tâm</p>
+                            </div>
+                        </li>
+                        <li class="trending-item">
+                            <span class="item-rank">2</span>
+                            <div class="item-info">
+                                <p class="item-title">Phó Sơn Hải</p>
+                                <p class="item-views">1 lượt quan tâm</p>
+                            </div>
+                        </li>
+                        <li class="trending-item">
+                            <span class="item-rank">3</span>
+                            <div class="item-info">
+                                <p class="item-title">Ngự Trù Của Bạo Chúa</p>
+                                <p class="item-views">1 lượt quan tâm</p>
+                            </div>
+                        </li>
+                        <li class="trending-item">
+                            <span class="item-rank">4</span>
+                            <div class="item-info">
+                                <p class="item-title">Giông Tố</p>
+                                <p class="item-views">1 lượt quan tâm</p>
+                            </div>
+                        </li>
+                        <li class="trending-item">
+                            <span class="item-rank">5</span>
+                            <div class="item-info">
+                                <p class="item-title">Nữ Hoàng Lừa Đảo</p>
+                                <p class="item-views">1 lượt quan tâm</p>
+                            </div>
+                        </li>
+                        <li class="trending-item">
+                            <span class="item-rank">6</span>
+                            <div class="item-info">
+                                <p class="item-title">Trăm Mảnh Ký Ức</p>
+                                <p class="item-views">1 lượt quan tâm</p>
+                            </div>
+                        </li>
+                        <li class="trending-item">
+                            <span class="item-rank">7</span>
+                            <div class="item-info">
+                                <p class="item-title">Ngày Không Ngủ</p>
+                                <p class="item-views">1 lượt quan tâm</p>
+                            </div>
+                        </li>
+                        <li class="trending-item">
+                            <span class="item-rank">8</span>
+                            <div class="item-info">
+                                <p class="item-title">Đảo Hải Tặc</p>
+                                <p class="item-views">1 lượt quan tâm</p>
+                            </div>
+                        </li>
+                        <li class="trending-item">
+                            <span class="item-rank">9</span>
+                            <div class="item-info">
+                                <p class="item-title">Khế Ước Song Sinh</p>
+                                <p class="item-views">1 lượt quan tâm</p>
+                            </div>
+                        </li>
+                        <li class="trending-item">
+                            <span class="item-rank">10</span>
+                            <div class="item-info">
+                                <p class="item-title">Triều Tuyết Lục</p>
+                                <p class="item-views">1 lượt quan tâm</p>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>NhanPhim</h3>
+                <p>Trang web xem phim trực tuyến hàng đầu Việt Nam với hàng nghìn bộ phim chất lượng cao.</p>
+                <div class="social-links">
+                    <a href="#" title="Facebook">📘</a>
+                    <a href="#" title="YouTube">📺</a>
+                    <a href="#" title="Instagram">📷</a>
+                    <a href="#" title="Twitter">🐦</a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Thể Loại Phim</h3>
+                <ul>
+                    <li><a href="#">Hành Động</a></li>
+                    <li><a href="#">Hài Hước</a></li>
+                    <li><a href="#">Tâm Lý</a></li>
+                    <li><a href="#">Kinh Dị</a></li>
+                    <li><a href="#">Lãng Mạn</a></li>
+                    <li><a href="#">Khoa Học Viễn Tưởng</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Phim Theo Quốc Gia</h3>
+                <ul>
+                    <li><a href="#">Hàn Quốc</a></li>
+                    <li><a href="#">Trung Quốc</a></li>
+                    <li><a href="#">Nhật Bản</a></li>
+                    <li><a href="#">Thái Lan</a></li>
+                    <li><a href="#">Việt Nam</a></li>
+                    <li><a href="#">Mỹ</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Hỗ Trợ</h3>
+                <ul>
+                    <li><a href="#">Liên Hệ</a></li>
+                    <li><a href="#">Báo Lỗi</a></li>
+                    <li><a href="#">Điều Khoản Sử Dụng</a></li>
+                    <li><a href="#">Chính Sách Bảo Mật</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 NhanPhim. Tất cả quyền được bảo lưu.</p>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <div class="scroll-to-top" id="scroll-to-top"></div>
+
+    <script src="js/scripts.js"></script>
+    
+    <!-- Firebase Configuration -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-analytics.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyDlk-EISr-tC0hxRZeo6FbheXabDJRUYLE",
+            authDomain: "web-phim-truc-tuyen.firebaseapp.com",
+            databaseURL: "https://web-phim-truc-tuyen-default-rtdb.firebaseio.com",
+            projectId: "web-phim-truc-tuyen",
+            storageBucket: "web-phim-truc-tuyen.firebasestorage.app",
+            messagingSenderId: "331338700875",
+            appId: "1:331338700875:web:78f0138f19a2240ffa95ce",
+            measurementId: "G-80PL6879SG"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth(app);
+
+        // Check authentication state
+        onAuthStateChanged(auth, (user) => {
+            const userActions = document.querySelector('.user-actions');
+            if (user) {
+                // User is signed in
+                userActions.innerHTML = `
+                    <div class="user-info">
+                        <span class="user-email">${user.email}</span>
+                        <div class="user-dropdown">
+                            <div class="user-avatar">${user.displayName ? user.displayName.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}</div>
+                            <div class="user-menu">
+                                <a href="#" class="user-menu-item">Hồ sơ</a>
+                                <a href="#" class="user-menu-item">Cài đặt</a>
+                                <a href="#" class="user-menu-item" id="logout-btn">Đăng xuất</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Add logout functionality
+                document.getElementById('logout-btn').addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    try {
+                        await signOut(auth);
+                        window.location.reload();
+                    } catch (error) {
+                        console.error('Logout error:', error);
+                    }
+                });
+            } else {
+                // User is signed out
+                userActions.innerHTML = `
+                    <a href="auth.html" class="login-btn">Đăng nhập</a>
+                    <a href="auth.html" class="register-btn">Đăng ký</a>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cài Đặt - NhanPhim Admin</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-video"></i>
+                    <span>NhanPhim Admin</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="dashboard.html" class="nav-link">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="movies.html" class="nav-link">
+                            <i class="fas fa-film"></i>
+                            <span>Quản Lý Phim</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="categories.html" class="nav-link">
+                            <i class="fas fa-tags"></i>
+                            <span>Thể Loại</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="users.html" class="nav-link">
+                            <i class="fas fa-users"></i>
+                            <span>Người Dùng</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="analytics.html" class="nav-link">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Thống Kê</span>
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a href="settings.html" class="nav-link">
+                            <i class="fas fa-cog"></i>
+                            <span>Cài Đặt</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="user-details">
+                        <span class="user-name">Admin User</span>
+                        <span class="user-role">Administrator</span>
+                    </div>
+                </div>
+                <button class="logout-btn" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Đăng Xuất
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle" id="sidebar-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 class="page-title">Cài Đặt Hệ Thống</h1>
+                </div>
+                <div class="header-right">
+                    <button class="btn btn-primary" id="save-settings">
+                        <i class="fas fa-save"></i>
+                        Lưu Cài Đặt
+                    </button>
+                </div>
+            </header>
+
+            <!-- Settings Content -->
+            <div class="settings-content">
+                <!-- Settings Tabs -->
+                <div class="settings-tabs">
+                    <button class="tab-btn active" data-tab="general">
+                        <i class="fas fa-cog"></i>
+                        Tổng Quan
+                    </button>
+                    <button class="tab-btn" data-tab="security">
+                        <i class="fas fa-shield-alt"></i>
+                        Bảo Mật
+                    </button>
+                    <button class="tab-btn" data-tab="notifications">
+                        <i class="fas fa-bell"></i>
+                        Thông Báo
+                    </button>
+                    <button class="tab-btn" data-tab="appearance">
+                        <i class="fas fa-palette"></i>
+                        Giao Diện
+                    </button>
+                    <button class="tab-btn" data-tab="backup">
+                        <i class="fas fa-database"></i>
+                        Sao Lưu
+                    </button>
+                </div>
+
+                <!-- General Settings -->
+                <div class="tab-content active" id="general-tab">
+                    <div class="settings-section">
+                        <h3>Thông tin cơ bản</h3>
+                        <div class="form-group">
+                            <label for="site-name">Tên trang web</label>
+                            <input type="text" id="site-name" value="NhanPhim" placeholder="Nhập tên trang web">
+                        </div>
+                        <div class="form-group">
+                            <label for="site-description">Mô tả trang web</label>
+                            <textarea id="site-description" placeholder="Nhập mô tả trang web">Nền tảng xem phim trực tuyến hàng đầu Việt Nam</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="site-url">URL trang web</label>
+                            <input type="url" id="site-url" value="https://nhanphim.com" placeholder="https://example.com">
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Cài đặt phim</h3>
+                        <div class="form-group">
+                            <label for="movies-per-page">Số phim mỗi trang</label>
+                            <input type="number" id="movies-per-page" value="20" min="10" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label for="auto-approve">Tự động duyệt phim mới</label>
+                            <label class="switch">
+                                <input type="checkbox" id="auto-approve" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="max-file-size">Kích thước file tối đa (MB)</label>
+                            <input type="number" id="max-file-size" value="500" min="100" max="2000">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Settings -->
+                <div class="tab-content" id="security-tab">
+                    <div class="settings-section">
+                        <h3>Bảo mật đăng nhập</h3>
+                        <div class="form-group">
+                            <label for="session-timeout">Thời gian hết hạn phiên (phút)</label>
+                            <input type="number" id="session-timeout" value="30" min="5" max="480">
+                        </div>
+                        <div class="form-group">
+                            <label for="max-login-attempts">Số lần đăng nhập sai tối đa</label>
+                            <input type="number" id="max-login-attempts" value="5" min="3" max="10">
+                        </div>
+                        <div class="form-group">
+                            <label for="require-2fa">Yêu cầu xác thực 2 yếu tố</label>
+                            <label class="switch">
+                                <input type="checkbox" id="require-2fa">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Bảo mật API</h3>
+                        <div class="form-group">
+                            <label for="api-rate-limit">Giới hạn API (requests/phút)</label>
+                            <input type="number" id="api-rate-limit" value="100" min="10" max="1000">
+                        </div>
+                        <div class="form-group">
+                            <label for="enable-cors">Bật CORS</label>
+                            <label class="switch">
+                                <input type="checkbox" id="enable-cors" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications Settings -->
+                <div class="tab-content" id="notifications-tab">
+                    <div class="settings-section">
+                        <h3>Thông báo email</h3>
+                        <div class="form-group">
+                            <label for="email-notifications">Bật thông báo email</label>
+                            <label class="switch">
+                                <input type="checkbox" id="email-notifications" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="smtp-host">SMTP Host</label>
+                            <input type="text" id="smtp-host" value="smtp.gmail.com" placeholder="smtp.gmail.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="smtp-port">SMTP Port</label>
+                            <input type="number" id="smtp-port" value="587" min="1" max="65535">
+                        </div>
+                        <div class="form-group">
+                            <label for="smtp-username">SMTP Username</label>
+                            <input type="email" id="smtp-username" placeholder="your-email@gmail.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="smtp-password">SMTP Password</label>
+                            <input type="password" id="smtp-password" placeholder="App password">
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Thông báo hệ thống</h3>
+                        <div class="form-group">
+                            <label for="new-user-notification">Thông báo người dùng mới</label>
+                            <label class="switch">
+                                <input type="checkbox" id="new-user-notification" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-movie-notification">Thông báo phim mới</label>
+                            <label class="switch">
+                                <input type="checkbox" id="new-movie-notification" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="error-notification">Thông báo lỗi hệ thống</label>
+                            <label class="switch">
+                                <input type="checkbox" id="error-notification" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Appearance Settings -->
+                <div class="tab-content" id="appearance-tab">
+                    <div class="settings-section">
+                        <h3>Giao diện chung</h3>
+                        <div class="form-group">
+                            <label for="theme">Chủ đề</label>
+                            <select id="theme">
+                                <option value="light">Sáng</option>
+                                <option value="dark" selected>Tối</option>
+                                <option value="auto">Tự động</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="primary-color">Màu chủ đạo</label>
+                            <input type="color" id="primary-color" value="#667eea">
+                        </div>
+                        <div class="form-group">
+                            <label for="language">Ngôn ngữ</label>
+                            <select id="language">
+                                <option value="vi" selected>Tiếng Việt</option>
+                                <option value="en">English</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Logo và favicon</h3>
+                        <div class="form-group">
+                            <label for="logo-url">URL Logo</label>
+                            <input type="url" id="logo-url" placeholder="https://example.com/logo.png">
+                        </div>
+                        <div class="form-group">
+                            <label for="favicon-url">URL Favicon</label>
+                            <input type="url" id="favicon-url" placeholder="https://example.com/favicon.ico">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Backup Settings -->
+                <div class="tab-content" id="backup-tab">
+                    <div class="settings-section">
+                        <h3>Sao lưu dữ liệu</h3>
+                        <div class="form-group">
+                            <label for="auto-backup">Tự động sao lưu</label>
+                            <label class="switch">
+                                <input type="checkbox" id="auto-backup" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="backup-frequency">Tần suất sao lưu</label>
+                            <select id="backup-frequency">
+                                <option value="daily">Hàng ngày</option>
+                                <option value="weekly" selected>Hàng tuần</option>
+                                <option value="monthly">Hàng tháng</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="backup-retention">Giữ lại sao lưu (ngày)</label>
+                            <input type="number" id="backup-retention" value="30" min="7" max="365">
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Thao tác sao lưu</h3>
+                        <div class="backup-actions">
+                            <button class="btn btn-primary" id="create-backup">
+                                <i class="fas fa-download"></i>
+                                Tạo sao lưu ngay
+                            </button>
+                            <button class="btn btn-secondary" id="restore-backup">
+                                <i class="fas fa-upload"></i>
+                                Khôi phục từ sao lưu
+                            </button>
+                        </div>
+                        <div class="backup-list" id="backup-list">
+                            <!-- Backup list will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/scripts.js"></script>
+    <script src="js/settings.js"></script>
+</body>
+</html>
