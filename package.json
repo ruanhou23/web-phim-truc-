@@ -21,7 +21,8 @@
     "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "puppeteer": "^24.25.0"
   },
   "author": "Your Name",
   "license": "ISC"
