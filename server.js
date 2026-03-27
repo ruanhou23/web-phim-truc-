@@ -1,5 +1,4 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const path = require('path');
 const cors = require('cors');
@@ -20,24 +19,8 @@ app.use(cors());
 // JWT Secret
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 
-// Database connection
-let mongoConnected = false;
-
-// MongoDB Connection
-if (process.env.MONGODB_URI) {
-    mongoose.connect(process.env.MONGODB_URI)
-    .then(() => {
-        console.log('✅ MongoDB connected successfully');
-        mongoConnected = true;
-    })
-    .catch(err => {
-        console.error('❌ MongoDB connection error:', err.message);
-        console.log('📝 MongoDB is required for this application');
-        mongoConnected = false;
-    });
-} else {
-    console.log('📝 MongoDB not configured - please set MONGODB_URI in .env file');
-}
+// Database connection status
+let dbConnected = false;
 
 // JWT Middleware
 const verifyToken = (req, res, next) => {
@@ -60,16 +43,26 @@ const verifyToken = (req, res, next) => {
 // Database Status Check
 setTimeout(() => {
     console.log('\n📊 Database Status:');
-    console.log(`   MongoDB: ${mongoConnected ? '✅ Connected' : '❌ Not connected'}`);
+    console.log(`   Database: ${dbConnected ? '✅ Connected' : '❌ Not connected'}`);
     console.log('   Server ready to handle requests\n');
 }, 1000);
 
-// Import models
-const User = require('./models/User');
-const Movie = require('./models/Movie');
-
 // API routes
 app.use('/api', apiRoutes);
+
+// Mock user data
+const mockUsers = [
+    {
+        id: '1',
+        email: 'admin@example.com',
+        password: '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+        name: 'Admin User',
+        phone: '0123456789',
+        role: 'admin',
+        isActive: true,
+        lastLogin: new Date()
+    }
+];
 
 // Auth API endpoints
 app.post('/api/auth/register', async (req, res) => {
@@ -77,7 +70,7 @@ app.post('/api/auth/register', async (req, res) => {
         const { email, password, name, phone } = req.body;
         
         // Check if user already exists
-        const existingUser = await User.findOne({ email });
+        const existingUser = mockUsers.find(user => user.email === email);
         if (existingUser) {
             return res.status(400).json({
                 success: false,
@@ -90,7 +83,8 @@ app.post('/api/auth/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         // Create user
-        const user = new User({
+        const newUser = {
+            id: (mockUsers.length + 1).toString(),
             email,
             password: hashedPassword,
             name,
@@ -106,16 +100,16 @@ app.post('/api/auth/register', async (req, res) => {
                     push: true
                 }
             }
-        });
+        };
 
-        await user.save();
+        mockUsers.push(newUser);
 
         // Generate JWT token
         const token = jwt.sign(
             { 
-                userId: user._id, 
-                email: user.email, 
-                role: user.role 
+                userId: newUser.id, 
+                email: newUser.email, 
+                role: newUser.role 
             },
             JWT_SECRET,
             { expiresIn: '24h' }
@@ -125,10 +119,10 @@ app.post('/api/auth/register', async (req, res) => {
             success: true,
             message: 'Đăng ký thành công!',
             user: {
-                id: user._id,
-                email: user.email,
-                name: user.name,
-                role: user.role
+                id: newUser.id,
+                email: newUser.email,
+                name: newUser.name,
+                role: newUser.role
             },
             token
         });
@@ -146,7 +140,7 @@ app.post('/api/auth/login', async (req, res) => {
         const { email, password } = req.body;
         
         // Find user
-        const user = await User.findOne({ email });
+        const user = mockUsers.find(u => u.email === email);
         if (!user) {
             return res.status(401).json({
                 success: false,
@@ -173,12 +167,11 @@ app.post('/api/auth/login', async (req, res) => {
 
         // Update last login
         user.lastLogin = new Date();
-        await user.save();
 
         // Generate JWT token
         const token = jwt.sign(
             { 
-                userId: user._id, 
+                userId: user.id, 
                 email: user.email, 
                 role: user.role 
             },
@@ -190,7 +183,7 @@ app.post('/api/auth/login', async (req, res) => {
             success: true,
             message: 'Đăng nhập thành công!',
             user: {
-                id: user._id,
+                id: user.id,
                 email: user.email,
                 name: user.name,
                 role: user.role
@@ -208,7 +201,7 @@ app.post('/api/auth/login', async (req, res) => {
 
 app.post('/api/auth/verify-token', verifyToken, async (req, res) => {
     try {
-        const user = await User.findById(req.user.userId);
+        const user = mockUsers.find(u => u.id === req.user.userId);
         if (!user) {
             return res.status(401).json({
                 success: false,
@@ -219,7 +212,7 @@ app.post('/api/auth/verify-token', verifyToken, async (req, res) => {
         res.json({
             success: true,
             user: {
-                id: user._id,
+                id: user.id,
                 email: user.email,
                 name: user.name,
                 role: user.role
@@ -234,37 +227,75 @@ app.post('/api/auth/verify-token', verifyToken, async (req, res) => {
     }
 });
 
+// Mock movies data
+const mockMovies = [
+    {
+        id: '1',
+        title: 'Avengers: Endgame',
+        description: 'After the devastating events of Avengers: Infinity War, the universe is in ruins.',
+        genre: 'Action',
+        year: 2019,
+        rating: 8.4,
+        imageUrl: 'https://via.placeholder.com/300x400',
+        videoUrl: '/videos/sample-video.mp4',
+        createdAt: new Date('2023-01-01')
+    },
+    {
+        id: '2',
+        title: 'Spider-Man: No Way Home',
+        description: 'With Spider-Man\'s identity now revealed, Peter asks Doctor Strange for help.',
+        genre: 'Action',
+        year: 2021,
+        rating: 8.2,
+        imageUrl: 'https://via.placeholder.com/300x400',
+        videoUrl: '/videos/sample-video.mp4',
+        createdAt: new Date('2023-01-02')
+    },
+    {
+        id: '3',
+        title: 'The Batman',
+        description: 'When a sadistic serial killer begins murdering key political figures in Gotham.',
+        genre: 'Action',
+        year: 2022,
+        rating: 7.8,
+        imageUrl: 'https://via.placeholder.com/300x400',
+        videoUrl: '/videos/sample-video.mp4',
+        createdAt: new Date('2023-01-03')
+    }
+];
+
 // Movies API
 app.get('/api/movies', async (req, res) => {
     try {
         const { page = 1, limit = 20, genre, search } = req.query;
-        const query = {};
+        let filteredMovies = [...mockMovies];
         
         if (genre) {
-            query.genre = genre;
+            filteredMovies = filteredMovies.filter(movie => movie.genre === genre);
         }
         
         if (search) {
-            query.$or = [
-                { title: { $regex: search, $options: 'i' } },
-                { description: { $regex: search, $options: 'i' } }
-            ];
+            filteredMovies = filteredMovies.filter(movie => 
+                movie.title.toLowerCase().includes(search.toLowerCase()) ||
+                movie.description.toLowerCase().includes(search.toLowerCase())
+            );
         }
 
-        const movies = await Movie.find(query)
-            .sort({ createdAt: -1 })
-            .limit(limit * 1)
-            .skip((page - 1) * limit);
+        // Sort by creation date (newest first)
+        filteredMovies.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-        const total = await Movie.countDocuments(query);
+        // Pagination
+        const startIndex = (page - 1) * limit;
+        const endIndex = startIndex + parseInt(limit);
+        const paginatedMovies = filteredMovies.slice(startIndex, endIndex);
 
         res.json({
             success: true,
-            movies: movies,
+            movies: paginatedMovies,
             pagination: {
                 currentPage: parseInt(page),
-                totalPages: Math.ceil(total / limit),
-                totalMovies: total
+                totalPages: Math.ceil(filteredMovies.length / limit),
+                totalMovies: filteredMovies.length
             }
         });
     } catch (error) {
@@ -278,7 +309,7 @@ app.get('/api/movies', async (req, res) => {
 
 app.get('/api/movies/:id', async (req, res) => {
     try {
-        const movie = await Movie.findById(req.params.id);
+        const movie = mockMovies.find(m => m.id === req.params.id);
         if (!movie) {
             return res.status(404).json({
                 success: false,
@@ -301,7 +332,7 @@ app.get('/api/movies/:id', async (req, res) => {
 
 app.post('/api/movies', verifyToken, async (req, res) => {
     try {
-        const user = await User.findById(req.user.userId);
+        const user = mockUsers.find(u => u.id === req.user.userId);
         if (user.role !== 'admin') {
             return res.status(403).json({
                 success: false,
@@ -311,7 +342,8 @@ app.post('/api/movies', verifyToken, async (req, res) => {
 
         const { title, description, genre, year, rating, imageUrl, videoUrl } = req.body;
         
-        const movie = new Movie({
+        const newMovie = {
+            id: (mockMovies.length + 1).toString(),
             title,
             description,
             genre,
@@ -319,15 +351,16 @@ app.post('/api/movies', verifyToken, async (req, res) => {
             rating,
             imageUrl,
             videoUrl,
-            createdBy: req.user.userId
-        });
+            createdBy: req.user.userId,
+            createdAt: new Date()
+        };
 
-        await movie.save();
+        mockMovies.push(newMovie);
 
         res.json({
             success: true,
             message: 'Thêm phim thành công!',
-            movie: movie
+            movie: newMovie
         });
     } catch (error) {
         console.error('Error adding movie:', error);
@@ -340,7 +373,7 @@ app.post('/api/movies', verifyToken, async (req, res) => {
 
 app.put('/api/movies/:id', verifyToken, async (req, res) => {
     try {
-        const user = await User.findById(req.user.userId);
+        const user = mockUsers.find(u => u.id === req.user.userId);
         if (user.role !== 'admin') {
             return res.status(403).json({
                 success: false,
@@ -348,23 +381,24 @@ app.put('/api/movies/:id', verifyToken, async (req, res) => {
             });
         }
 
-        const movie = await Movie.findByIdAndUpdate(
-            req.params.id,
-            { ...req.body, updatedAt: new Date() },
-            { new: true }
-        );
-
-        if (!movie) {
+        const movieIndex = mockMovies.findIndex(m => m.id === req.params.id);
+        if (movieIndex === -1) {
             return res.status(404).json({
                 success: false,
                 message: 'Phim không tồn tại'
             });
         }
 
+        mockMovies[movieIndex] = {
+            ...mockMovies[movieIndex],
+            ...req.body,
+            updatedAt: new Date()
+        };
+
         res.json({
             success: true,
             message: 'Cập nhật phim thành công!',
-            movie: movie
+            movie: mockMovies[movieIndex]
         });
     } catch (error) {
         console.error('Error updating movie:', error);
@@ -377,7 +411,7 @@ app.put('/api/movies/:id', verifyToken, async (req, res) => {
 
 app.delete('/api/movies/:id', verifyToken, async (req, res) => {
     try {
-        const user = await User.findById(req.user.userId);
+        const user = mockUsers.find(u => u.id === req.user.userId);
         if (user.role !== 'admin') {
             return res.status(403).json({
                 success: false,
@@ -385,13 +419,15 @@ app.delete('/api/movies/:id', verifyToken, async (req, res) => {
             });
         }
 
-        const movie = await Movie.findByIdAndDelete(req.params.id);
-        if (!movie) {
+        const movieIndex = mockMovies.findIndex(m => m.id === req.params.id);
+        if (movieIndex === -1) {
             return res.status(404).json({
                 success: false,
                 message: 'Phim không tồn tại'
             });
         }
+
+        mockMovies.splice(movieIndex, 1);
 
         res.json({
             success: true,
@@ -433,7 +469,7 @@ app.post('/api/admin/login', async (req, res) => {
     try {
         const { email, password } = req.body;
         
-        const user = await User.findOne({ email, role: 'admin' });
+        const user = mockUsers.find(u => u.email === email && u.role === 'admin');
         if (!user) {
             return res.status(401).json({
                 success: false,
@@ -451,7 +487,7 @@ app.post('/api/admin/login', async (req, res) => {
 
         const token = jwt.sign(
             { 
-                userId: user._id, 
+                userId: user.id, 
                 email: user.email, 
                 role: user.role 
             },
@@ -463,7 +499,7 @@ app.post('/api/admin/login', async (req, res) => {
             success: true,
             message: 'Đăng nhập thành công',
             user: {
-                id: user._id,
+                id: user.id,
                 email: user.email,
                 name: user.name,
                 role: user.role
@@ -481,7 +517,7 @@ app.post('/api/admin/login', async (req, res) => {
 
 app.get('/api/admin/stats', verifyToken, async (req, res) => {
     try {
-        const user = await User.findById(req.user.userId);
+        const user = mockUsers.find(u => u.id === req.user.userId);
         if (user.role !== 'admin') {
             return res.status(403).json({
                 success: false,
@@ -489,11 +525,11 @@ app.get('/api/admin/stats', verifyToken, async (req, res) => {
             });
         }
 
-        const totalMovies = await Movie.countDocuments();
-        const totalUsers = await User.countDocuments();
+        const totalMovies = mockMovies.length;
+        const totalUsers = mockUsers.length;
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        const todayUsers = await User.countDocuments({ lastLogin: { $gte: today } });
+        const todayUsers = mockUsers.filter(u => new Date(u.lastLogin) >= today).length;
 
         res.json({
             success: true,
@@ -519,7 +555,7 @@ app.get('/api/status', (req, res) => {
         success: true,
         message: 'Database status retrieved',
         database: {
-            mongodb: mongoConnected,
+            connected: dbConnected,
             timestamp: new Date().toISOString()
         },
         server: {

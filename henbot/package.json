@@ -1,0 +1,21 @@
+{
+  "name": "henbot",
+  "version": "1.0.0",
+  "description": "Movie data processing and conversion tools",
+  "main": "convert.js",
+  "scripts": {
+    "start": "node convert.js",
+    "convert": "node convert.js",
+    "csv-to-json": "node csv-to-json.js",
+    "create-images": "node create-image-mapping.js",
+    "help": "echo Available commands: convert, csv-to-json, create-images, start"
+  },
+  "dependencies": {
+    "puppeteer": "^24.22.0",
+    "csv-parser": "^3.0.0",
+    "csv-writer": "^1.6.0"
+  },
+  "keywords": ["movie", "data", "conversion", "csv", "json"],
+  "author": "NhanPhim Team",
+  "license": "MIT"
+}

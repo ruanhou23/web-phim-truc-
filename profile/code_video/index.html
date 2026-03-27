@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced HLS Player</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .player-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        video {
+            width: 100%;
+            border-radius: 4px;
+            background: #000;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 8px 16px;
+            background: #4a6fa5;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #3a5a8a;
+        }
+        button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+        .status-panel {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+        }
+        .error-panel {
+            margin-top: 15px;
+            padding: 10px;
+            background: #ffebee;
+            color: #c62828;
+            border-radius: 4px;
+            display: none;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .stat-card {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        .stat-card h4 {
+            margin: 0 0 5px 0;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="player-container">
+        <h2>HLS Video Player</h2>
+        <video id="video" controls playsinline></video>
+        
+        <div class="controls">
+            <button id="play-btn">Play</button>
+            <button id="fullscreen-btn">Fullscreen</button>
+            <button id="reload-btn">Reload Player</button>
+            <button id="stats-btn">Toggle Stats</button>
+        </div>
+        
+        <div id="error-panel" class="error-panel"></div>
+        
+        <div id="stats-panel" class="stats" style="display: none;">
+            <div class="stat-card">
+                <h4>Video Stats</h4>
+                <div id="video-stats"></div>
+            </div>
+            <div class="stat-card">
+                <h4>Buffer Stats</h4>
+                <div id="buffer-stats"></div>
+            </div>
+            <div class="stat-card">
+                <h4>Network Stats</h4>
+                <div id="network-stats"></div>
+            </div>
+        </div>
+        
+        <div id="status-panel" class="status-panel">Initializing HLS player...</div>
+    </div>
+
+    <script>
+        // Configuration
+        const M3U8_URL = '/playlist.m3u8';
+        const STATS_UPDATE_INTERVAL = 1000;
+        const AUTO_RECOVER_DELAY = 3000;
+        
+        // Elements
+        const video = document.getElementById('video');
+        const playBtn = document.getElementById('play-btn');
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        const reloadBtn = document.getElementById('reload-btn');
+        const statsBtn = document.getElementById('stats-btn');
+        const errorPanel = document.getElementById('error-panel');
+        const statusPanel = document.getElementById('status-panel');
+        const statsPanel = document.getElementById('stats-panel');
+        const videoStats = document.getElementById('video-stats');
+        const bufferStats = document.getElementById('buffer-stats');
+        const networkStats = document.getElementById('network-stats');
+        
+        // HLS Player instance
+        let hls;
+        let statsInterval;
+        let recoveryAttempts = 0;
+        const MAX_RECOVERY_ATTEMPTS = 5;
+        
+        // HLS Configuration
+        const hlsConfig = {
+            maxBufferLength: 30,
+            maxMaxBufferLength: 60,
+            maxBufferSize: 60 * 1000 * 1000,
+            maxBufferHole: 0.5,
+            lowLatencyMode: false,
+            enableWorker: true,
+            startLevel: -1,
+            abrEwmaDefaultEstimate: 500000,
+            backBufferLength: 30,
+            maxFragLookUpTolerance: 0.25,
+            stretchShortVideoTrack: true,
+            manifestLoadingTimeOut: 10000,
+            manifestLoadingMaxRetry: 3,
+            manifestLoadingRetryDelay: 1000,
+            levelLoadingTimeOut: 10000,
+            levelLoadingMaxRetry: 3,
+            levelLoadingRetryDelay: 1000,
+            fragLoadingTimeOut: 20000,
+            fragLoadingMaxRetry: 6,
+            fragLoadingRetryDelay: 1000,
+        };
+        
+        // Initialize HLS player
+        function initPlayer() {
+            // Destroy existing instance
+            if (hls) {
+                hls.destroy();
+                clearInterval(statsInterval);
+            }
+            
+            // Reset UI
+            errorPanel.style.display = 'none';
+            statusPanel.textContent = 'Initializing HLS player...';
+            recoveryAttempts = 0;
+            
+            if (Hls.isSupported()) {
+                hls = new Hls(hlsConfig);
+                
+                // Event handlers
+                hls.on(Hls.Events.MEDIA_ATTACHED, () => {
+                    updateStatus('Media attached, loading playlist...');
+                    hls.loadSource(M3U8_URL);
+                });
+                
+                hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
+                    updateStatus(`Playlist loaded with ${data.levels.length} quality levels`);
+                    playBtn.disabled = false;
+                    video.play().catch(e => {
+                        updateStatus('Autoplay blocked: ' + e.message);
+                    });
+                });
+                
+                hls.on(Hls.Events.FRAG_LOADED, (event, data) => {
+                    updateStatus(`Loaded segment ${data.frag.sn} (${(data.stats.tloaded/1000).toFixed(2)}s)`);
+                });
+                
+                hls.on(Hls.Events.FRAG_BUFFERED, () => {
+                    updateBufferStats();
+                });
+                
+                hls.on(Hls.Events.ERROR, (event, data) => {
+                    handleHlsError(data);
+                });
+                
+                // Attach to video element
+                hls.attachMedia(video);
+                
+                // Start stats updates
+                statsInterval = setInterval(updateStats, STATS_UPDATE_INTERVAL);
+                
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // Native HLS support (Safari)
+                updateStatus('Using native HLS support');
+                video.src = M3U8_URL;
+                playBtn.disabled = false;
+                
+                video.addEventListener('loadedmetadata', () => {
+                    updateStatus('Video metadata loaded');
+                });
+                
+                video.addEventListener('error', () => {
+                    showError('Native HLS playback error');
+                });
+            } else {
+                showError('HLS is not supported in this browser');
+            }
+        }
+        
+        // Error handling
+        function handleHlsError(data) {
+            let recoverable = false;
+            let errorMsg = '';
+            
+            switch(data.type) {
+                case Hls.ErrorTypes.NETWORK_ERROR:
+                    errorMsg = `Network Error (${data.details})`;
+                    recoverable = true;
+                    break;
+                case Hls.ErrorTypes.MEDIA_ERROR:
+                    errorMsg = `Media Error (${data.details})`;
+                    recoverable = true;
+                    break;
+                default:
+                    errorMsg = `Fatal Error (${data.details})`;
+            }
+            
+            showError(errorMsg);
+            
+            if (recoverable && recoveryAttempts < MAX_RECOVERY_ATTEMPTS) {
+                recoveryAttempts++;
+                updateStatus(`Attempting recovery (${recoveryAttempts}/${MAX_RECOVERY_ATTEMPTS})...`);
+                
+                if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+                    hls.recoverMediaError();
+                } else {
+                    setTimeout(() => {
+                        hls.startLoad();
+                    }, AUTO_RECOVER_DELAY);
+                }
+            } else if (recoveryAttempts >= MAX_RECOVERY_ATTEMPTS) {
+                showError('Max recovery attempts reached. Please reload player.');
+            }
+        }
+        
+        // UI Updates
+        function updateStatus(message) {
+            statusPanel.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            console.log(message);
+        }
+        
+        function showError(message) {
+            errorPanel.textContent = `[${new Date().toLocaleTimeString()}] ERROR: ${message}`;
+            errorPanel.style.display = 'block';
+            console.error(message);
+        }
+        
+        function updateStats() {
+            if (!video) return;
+            
+            // Video stats
+            const videoInfo = [
+                `Resolution: ${video.videoWidth}x${video.videoHeight}`,
+                `Current time: ${video.currentTime.toFixed(2)}s`,
+                `Duration: ${video.duration.toFixed(2)}s`,
+                `Playback rate: ${video.playbackRate}x`,
+                `Volume: ${Math.round(video.volume * 100)}%`,
+                `Paused: ${video.paused}`
+            ].join('\n');
+            
+            videoStats.textContent = videoInfo;
+            
+            // Buffer stats
+            updateBufferStats();
+            
+            // Network stats
+            if (hls) {
+                const networkInfo = [
+                    `Level: ${hls.currentLevel}`,
+                    `Bitrate: ${hls.bandwidthEstimate ? (hls.bandwidthEstimate / 1000).toFixed(2) + ' kbps' : 'N/A'}`,
+                    `Buffered segments: ${hls.bufferCodecEvents?.length || 0}`,
+                    `FPS: ${hls.stats?.fps?.toFixed(2) || 'N/A'}`,
+                    `Dropped frames: ${hls.stats?.droppedFrames || 0}`
+                ].join('\n');
+                
+                networkStats.textContent = networkInfo;
+            }
+        }
+        
+        function updateBufferStats() {
+            if (!video) return;
+            
+            let bufferInfo = 'No buffer';
+            if (video.buffered.length > 0) {
+                const bufferedEnd = video.buffered.end(video.buffered.length - 1);
+                const bufferLength = bufferedEnd - video.currentTime;
+                bufferInfo = [
+                    `Buffered: ${bufferLength.toFixed(2)}s`,
+                    `Buffer range: ${video.currentTime.toFixed(2)}-${bufferedEnd.toFixed(2)}s`,
+                    `Buffer health: ${(bufferLength / hls.config.maxBufferLength * 100).toFixed(1)}%`
+                ].join('\n');
+            }
+            bufferStats.textContent = bufferInfo;
+        }
+        
+        // Event listeners
+        playBtn.addEventListener('click', () => {
+            if (video.paused) {
+                video.play().then(() => {
+                    playBtn.textContent = 'Pause';
+                }).catch(e => {
+                    showError('Playback failed: ' + e.message);
+                });
+            } else {
+                video.pause();
+                playBtn.textContent = 'Play';
+            }
+        });
+        
+        fullscreenBtn.addEventListener('click', () => {
+            if (video.requestFullscreen) {
+                video.requestFullscreen();
+            } else if (video.webkitRequestFullscreen) {
+                video.webkitRequestFullscreen();
+            } else if (video.msRequestFullscreen) {
+                video.msRequestFullscreen();
+            }
+        });
+        
+        reloadBtn.addEventListener('click', () => {
+            updateStatus('Reloading player...');
+            initPlayer();
+        });
+        
+        statsBtn.addEventListener('click', () => {
+            statsPanel.style.display = statsPanel.style.display === 'none' ? 'grid' : 'none';
+        });
+        
+        video.addEventListener('play', () => {
+            playBtn.textContent = 'Pause';
+        });
+        
+        video.addEventListener('pause', () => {
+            playBtn.textContent = 'Play';
+        });
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', initPlayer);
+    </script>
+</body>
+</html>

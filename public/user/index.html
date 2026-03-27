@@ -4,7 +4,141 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NhanPhim - Trang Web Xem Phim</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles-no-ads.css">
+    <style>
+        /* Adult movie styles */
+        .adult-movie {
+            position: relative;
+        }
+        
+        .adult-badge {
+            background: #ff4444;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+        
+        /* Load more button styles */
+        .load-more-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .load-more-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .load-more-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .load-more-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* Pagination styles */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            gap: 10px;
+        }
+        
+        .pagination-btn {
+            background: #333;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .pagination-btn:hover:not(:disabled) {
+            background: #555;
+            transform: scale(1.1);
+        }
+        
+        .pagination-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        
+        .pagination-info {
+            background: #333;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        
+        .pagination-input {
+            background: #555;
+            color: white;
+            border: 1px solid #777;
+            border-radius: 4px;
+            padding: 4px 8px;
+            width: 50px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .pagination-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        /* Hidden movies */
+        .movie-card.hidden {
+            display: none;
+        }
+        
+        /* Loading state */
+        .loading-more {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
     <header class="main-header">
@@ -125,58 +259,61 @@
     </nav>
 
     <main>
-        <section class="hero-section">
+        <section class="hero-section" id="hero-section">
             <div class="hero-content">
-                <h1>Lệnh Trừng Phạt</h1>
-                <p>Nội dung tóm tắt của bộ phim nổi bật.</p>
-                <a href="#" class="play-button">► Xem Phim</a>
+                <h1 id="hero-title">NhanPhim - Kho Phim Khổng Lồ</h1>
+                <p id="hero-description">Hàng nghìn bộ phim chất lượng cao từ khắp nơi trên thế giới</p>
+                <a href="#" class="play-button" id="hero-play-btn">► Khám Phá Ngay</a>
             </div>
         </section>
         
         <div class="main-content-wrapper">
             <div class="container">
-            <div class="ad-banner">
-                <img src="https://placehold.co/970x90/e50914/FFFFFF?text=ADVERTISEMENT" alt="Advertisement">
-            </div>
-
             <section class="quick-filters">
-                <button class="filter-btn" data-category="marvel">Marvel</button>
-                <button class="filter-btn" data-category="4k">4K</button>
-                <button class="filter-btn" data-category="sitcom">Sitcom</button>
-                <button class="filter-btn" data-category="dubbed">Lồng Tiếng</button>
-                <button class="filter-btn" data-category="time-travel">Xuyên Không</button>
-                <button class="filter-btn" data-category="historical">Cổ Trang</button>
+                <button class="filter-btn" data-category="chautinhtri">Châu Tinh Trì</button>
+                <button class="filter-btn" data-category="thanhlong">Thành Long</button>
+                <button class="filter-btn" data-category="lylienkiet">Lý Liên Kiệt</button>
+                <button class="filter-btn" data-category="capba">Cấp Bậc</button>
+                <button class="filter-btn" data-category="daohaitac">Đảo Hải Tặc</button>
+                <button class="filter-btn" data-category="phim18">Phim 18+</button>
+                <button class="filter-btn" data-category="onepiece">One Piece</button>
+                <button class="filter-btn" data-category="lamchanhanh">Làm Chánh Ánh</button>
+                <button class="filter-btn" data-category="chungtudon">Chung Tử Đơn</button>
+                <button class="filter-btn" data-category="tng_hp">Tình Yêu Hạnh Phúc</button>
             </section>
             
             <section class="movie-category">
-                <h2 class="category-title">Phim Hàn Quốc mới</h2>
+                <h2 class="category-title">🎬 Phim Châu Tinh Trì</h2>
                 <div class="movie-list" id="korean-movies">
                     <!-- Movies will be loaded dynamically -->
                 </div>
             </section>
 
             <section class="movie-category">
-                <h2 class="category-title">Phim Trung Quốc mới</h2>
+                <h2 class="category-title">🔥 Phim Thành Long</h2>
                 <div class="movie-list" id="chinese-movies">
                     <!-- Movies will be loaded dynamically -->
                 </div>
             </section>
 
-            <div class="ad-banner">
-                <img src="https://placehold.co/970x90/e50914/FFFFFF?text=ADVERTISEMENT" alt="Advertisement">
-            </div>
-
             <section class="movie-category">
-                <h2 class="category-title">Phim (Điện Ảnh Mới Cập Nhật)</h2>
+                <h2 class="category-title">✨ Phim Mới Cập Nhật</h2>
                 <div class="movie-list" id="latest-movies">
                     <!-- Movies will be loaded dynamically -->
                 </div>
             </section>
             
             <section class="movie-category">
-                <h2 class="category-title">Bảng Xếp Hạng</h2>
-                <div class="movie-list top-ranked-list" id="top-ranked-movies">
+                <h2 class="category-title">💪 Phim Lý Liên Kiệt</h2>
+                <div class="movie-list" id="top-ranked-movies">
                     <!-- Top ranked movies will be loaded dynamically -->
+                </div>
+            </section>
+
+            <section class="movie-category" id="adult-movies-section">
+                <h2 class="category-title">🔞 Phim 18+</h2>
+                <div class="movie-list" id="adult-movies">
+                    <!-- Adult movies will be loaded dynamically -->
                 </div>
             </section>
             </div>
@@ -194,77 +331,8 @@
                         <div class="tab">Tháng</div>
                     </div>
 
-                    <ol class="trending-list">
-                        <li class="trending-item">
-                            <span class="item-rank">1</span>
-                            <div class="item-info">
-                                <p class="item-title">Hãy Để Tôi Tỏa Sáng</p>
-                                <p class="item-views">1 lượt quan tâm</p>
-                            </div>
-                        </li>
-                        <li class="trending-item">
-                            <span class="item-rank">2</span>
-                            <div class="item-info">
-                                <p class="item-title">Phó Sơn Hải</p>
-                                <p class="item-views">1 lượt quan tâm</p>
-                            </div>
-                        </li>
-                        <li class="trending-item">
-                            <span class="item-rank">3</span>
-                            <div class="item-info">
-                                <p class="item-title">Ngự Trù Của Bạo Chúa</p>
-                                <p class="item-views">1 lượt quan tâm</p>
-                            </div>
-                        </li>
-                        <li class="trending-item">
-                            <span class="item-rank">4</span>
-                            <div class="item-info">
-                                <p class="item-title">Giông Tố</p>
-                                <p class="item-views">1 lượt quan tâm</p>
-                            </div>
-                        </li>
-                        <li class="trending-item">
-                            <span class="item-rank">5</span>
-                            <div class="item-info">
-                                <p class="item-title">Nữ Hoàng Lừa Đảo</p>
-                                <p class="item-views">1 lượt quan tâm</p>
-                            </div>
-                        </li>
-                        <li class="trending-item">
-                            <span class="item-rank">6</span>
-                            <div class="item-info">
-                                <p class="item-title">Trăm Mảnh Ký Ức</p>
-                                <p class="item-views">1 lượt quan tâm</p>
-                            </div>
-                        </li>
-                        <li class="trending-item">
-                            <span class="item-rank">7</span>
-                            <div class="item-info">
-                                <p class="item-title">Ngày Không Ngủ</p>
-                                <p class="item-views">1 lượt quan tâm</p>
-                            </div>
-                        </li>
-                        <li class="trending-item">
-                            <span class="item-rank">8</span>
-                            <div class="item-info">
-                                <p class="item-title">Đảo Hải Tặc</p>
-                                <p class="item-views">1 lượt quan tâm</p>
-                            </div>
-                        </li>
-                        <li class="trending-item">
-                            <span class="item-rank">9</span>
-                            <div class="item-info">
-                                <p class="item-title">Khế Ước Song Sinh</p>
-                                <p class="item-views">1 lượt quan tâm</p>
-                            </div>
-                        </li>
-                        <li class="trending-item">
-                            <span class="item-rank">10</span>
-                            <div class="item-info">
-                                <p class="item-title">Triều Tuyết Lục</p>
-                                <p class="item-views">1 lượt quan tâm</p>
-                            </div>
-                        </li>
+                    <ol class="trending-list" id="trending-list">
+                        <!-- Trending movies will be loaded dynamically -->
                     </ol>
                 </div>
             </aside>
@@ -330,6 +398,27 @@
     <div class="scroll-to-top" id="scroll-to-top"></div>
 
     <script src="js/scripts.js"></script>
+    <script src="js/imageMapping.js"></script>
+    <script src="adultImageMapping.js"></script>
+    <script src="js/movieData.js"></script>
+    
+    <!-- Debug script -->
+    <script>
+        // Debug: Check if movieDataManager is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('📄 Index.html loaded');
+            
+            // Wait a bit for movieDataManager to initialize
+            setTimeout(() => {
+                if (typeof movieDataManager !== 'undefined') {
+                    console.log('✅ movieDataManager found');
+                    console.log('Movies loaded:', movieDataManager.movies ? movieDataManager.movies.length : 'undefined');
+                } else {
+                    console.error('❌ movieDataManager not found');
+                }
+            }, 1000);
+        });
+    </script>
     
     <!-- Firebase Configuration -->
     <script type="module">

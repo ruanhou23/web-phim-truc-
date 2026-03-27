@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Reinabanana Profile
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans&display=swap" rel="stylesheet"/>
+  <style>
+   body {
+      font-family: "Open Sans", sans-serif;
+    }
+    .font-montserrat {
+      font-family: "Montserrat", sans-serif;
+    }
+    /* Scrollbar for posts list */
+    .scrollbar-thin::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+      background-color: #cbb9d9;
+      border-radius: 10px;
+    }
+    .scrollbar-thin::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 20px;
+      max-width: 360px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    .card__header {
+      padding: 24px;
+      display: flex;
+      align-items: center;
+    }
+    .card__header .icon {
+      font-size: 24px;
+      line-height: 1;
+      color: #000000;
+      flex-shrink: 0;
+      margin-left: auto;
+    }
+    .card__body {
+      padding: 0px 24px 24px;
+    }
+    .card__footer {
+      padding: 24px;
+      font-size: 18px;
+      color: #78858F;
+    }
+    .track-art {
+      padding-bottom: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .track-art-img {
+      width: 172px;
+      height: 172px;
+      object-fit: cover;
+      border-radius: 100%;
+      display: block;
+      margin: 0 auto;
+      box-shadow: 0 4px 16px 0 #e6e0e9;
+      border: 8px solid #fff;
+      background: #f9f7fa;
+      transition: box-shadow 0.3s;
+    }
+    .track-art-img.disk {
+      border: 8px solid #a88cd9;
+      box-shadow: 0 0 0 4px #e6e0e9;
+      position: relative;
+    }
+    .track-art-img.rotating {
+      animation: spin-disk 2.5s linear infinite;
+    }
+    @keyframes spin-disk {
+      100% { transform: rotate(360deg); }
+    }
+    .track-name {
+      font-size: 24px;
+      font-weight: 600;
+      color: #000000;
+      text-align: center;
+      padding-bottom: 8px;
+    }
+    .track-artist {
+      font-size: 16px;
+      color: #737373;
+      text-align: center;
+      padding-bottom: 24px;
+    }
+    .buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 24px;
+    }
+    .player-btn {
+      margin: 0 6px;
+      width: 40px;
+      height: 40px;
+      color: #000000;
+      font-size: 24px;
+      border-radius: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background: transparent;
+    }
+    .player-btn.player-btn-play {
+      width: 52px;
+      height: 52px;
+      background: #FF3C78;
+      color: #ffffff;
+    }
+    .slider_container {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .slider_container .fas {
+      font-size: 24px;
+    }
+    .cr-slider {
+      -webkit-appearance: none;
+      background-color: transparent;
+      cursor: pointer;
+      width: 100%;
+      margin: 0 16px;
+    }
+    .cr-slider::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 6px;
+      background: #EBEBEB;
+      border: 0;
+      border-radius: 6px;
+    }
+    .cr-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      border: none;
+      height: 16px;
+      width: 16px;
+      border-radius: 50%;
+      background: #FF3C78;
+      margin-top: -6px;
+    }
+    .cr-slider:focus {
+      outline: none;
+    }
+    .cr-slider::-moz-range-track {
+      width: 100%;
+      height: 6px;
+      background: #EBEBEB;
+      border: 0;
+      border-radius: 3px;
+    }
+    .cr-slider::-moz-range-thumb {
+      border: none;
+      height: 16px;
+      width: 16px;
+      border-radius: 50%;
+      background: #FF3C78;
+      margin-top: -6px;
+    }
+    .cr-slider:-moz-focusring {
+      outline: 1px solid white;
+      outline-offset: -1px;
+    }
+    .cr-slider::-ms-track {
+      width: 100%;
+      height: 6px;
+      background: transparent;
+      border-color: transparent;
+      border-width: 6px 0;
+      color: transparent;
+    }
+    .cr-slider::-ms-fill-lower {
+      background: #EBEBEB;
+      border-radius: 10px;
+    }
+    .cr-slider::-ms-fill-upper {
+      background: #EBEBEB;
+      border-radius: 10px;
+    }
+    .cr-slider::-ms-thumb {
+      border: none;
+      height: 16px;
+      width: 16px;
+      border-radius: 50%;
+      background: #2A2662;
+      margin-top: 1px;
+    }
+    .cr-slider:focus::-ms-fill-lower {
+      background: #EBEBEB;
+    }
+    .cr-slider:focus::-ms-fill-upper {
+      background: #EBEBEB;
+    }
+    .combined-banner {
+      position: relative;
+      z-index: 10;
+    }
+    @media (max-width: 768px) {
+      .combined-banner {
+        height: 120px;
+      }
+    }
+  </style>
+ </head>
+ <body class="bg-[#f9f7fa] text-[#3a3a3a] min-h-screen flex flex-col">
+  <!-- Top Navigation -->
+  <header class="flex items-center justify-between px-4 py-2 bg-white border-b border-[#e6e0e9] sticky top-0 z-30">
+   <nav class="flex items-center space-x-4 text-xs font-montserrat font-semibold text-[#3a3a3a]">
+    <a class="flex items-center space-x-1 hover:text-[#a88cd9]" href="#">
+     <i class="fas fa-home">
+     </i>
+     <span>
+      HOME
+     </span>
+    </a>
+    <a class="flex items-center space-x-1 hover:text-[#a88cd9]" href="#">
+     <img alt="Twitter icon" class="w-4 h-4" height="16" src="https://storage.googleapis.com/a1aa/image/c84c2a93-69c9-4411-0b30-215aa15d9b4d.jpg" width="16"/>
+     <span>
+      TWITTER
+     </span>
+    </a>
+    <a class="flex items-center space-x-1 hover:text-[#a88cd9]" href="#">
+     <img alt="Tumblr icon" class="w-4 h-4" height="16" src="https://storage.googleapis.com/a1aa/image/701ac8dd-c279-45f7-7de1-7cb0d7806be1.jpg" width="16"/>
+     <span>
+      TUMBLR
+     </span>
+    </a>
+    <a class="flex items-center space-x-1 hover:text-[#a88cd9]" href="#">
+     <img alt="DeviantArt icon" class="w-4 h-4" height="16" src="https://storage.googleapis.com/a1aa/image/c6295811-b6d8-4427-6c7f-3fa1e864b718.jpg" width="16"/>
+     <span>
+      DEVIANTART
+     </span>
+    </a>
+   </nav>
+   <form class="flex items-center space-x-2 bg-[#f0e9f7] rounded-full px-3 py-1 w-[180px] sm:w-[280px] md:w-[320px]">
+    <input class="bg-transparent text-xs placeholder:text-[#b9b9b9] focus:outline-none w-full" placeholder="Search" type="search"/>
+    <button class="bg-[#d6b9f7] text-white text-xs font-semibold rounded-full px-3 py-1 hover:bg-[#c9a9f7] transition" type="submit">
+     POST
+    </button>
+   </form>
+  </header>
+  <!-- New Combined Banner -->
+  <div class="w-full h-[180px] rounded-lg overflow-hidden mx-auto max-w-[900px] mt-4 px-4 combined-banner">
+   <img alt="Anime style girl with long white hair holding a sword with butterflies around, fantasy background wide" class="object-cover w-full h-full" height="180" src="https://storage.googleapis.com/a1aa/image/8830487f-7b22-4cb6-f1ea-e90639b8e198.jpg" width="900"/>
+  </div>
+  <!-- Main Content -->
+  <main class="flex flex-col md:flex-row max-w-[900px] mx-auto mt-4 px-4 pb-8">
+   <!-- Left Sidebar -->
+   <aside class="w-full md:w-[280px] flex-shrink-0 space-y-6">
+    <!-- Profile Circle Image -->
+    <div class="relative w-[120px] h-[120px] rounded-full border-4 border-white mx-auto overflow-hidden shadow-lg">
+     <img alt="Anime girl with long white hair and horns holding a sword, circular portrait" class="object-cover w-full h-full" height="120" src="https://storage.googleapis.com/a1aa/image/a5e6353e-55c1-499f-d58f-7c1f15c44857.jpg" width="120"/>
+    </div>
+    <!-- Profile Info -->
+    <div class="text-center mt-2">
+     <h1 class="font-montserrat font-bold text-lg text-[#3a3a3a]">
+      Reinabanana
+     </h1>
+     <p class="text-xs text-[#6b6b6b]">
+      @Reinasaurus
+     </p>
+    </div>
+    <div class="text-center px-4 text-[10px] text-[#6b6b6b] leading-4">
+     <p>
+      Reina | Female | Gemini | INFP | Ravenclaw Obsessed with Granblue Fantasy, IDOLiSH7, and Love Live! Hungry 24/7. Forever gacha hell slave.
+     </p>
+     <!-- Audio Player Start -->
+     <div class="card player mt-4">
+       <div class="details">
+         <div class="track-art"><img src="" alt="music-cover" class="track-art-img" /></div>
+         <div class="track-name">Track Name</div>
+         <div class="track-artist">Track Artist</div>
+       </div>
+       <div class="slider_container">
+         <div class="current-time">00:00</div>
+         <input type="range" min="1" max="100" value="0" class="seek_slider cr-slider" onchange="seekTo()">
+         <div class="total-duration">00:00</div>
+       </div>
+       <div class="buttons">
+         <div class="prev-track player-btn" onclick="prevTrack()"><i class="fas fa-step-backward"></i></div>
+         <div class="playpause-track player-btn player-btn-play" onclick="playpauseTrack()"><i class="fas fa-play"></i></div>
+         <div class="next-track player-btn" onclick="nextTrack()"><i class="fas fa-step-forward"></i></div>
+       </div>
+     </div>
+     <!-- Audio Player End -->
+    </div>
+    <div class="flex items-center justify-center space-x-1 text-[10px] text-[#6b6b6b] mt-1">
+    </div>
+    <!-- Layout Section -->
+    <section class="bg-white rounded-lg border border-[#e6e0e9] p-3 text-[10px] text-[#3a3a3a]">
+     <h2 class="font-montserrat font-bold text-xs mb-1">
+      Layout
+     </h2>
+     <p class="leading-4">
+      This layout features
+      <a class="text-[#a88cd9] hover:underline" href="#">
+       Nerimayo
+      </a>
+      from
+      <a class="text-[#a88cd9] hover:underline" href="#">
+       GranblueFantasy
+      </a>
+      . The theme is basically a mixture of Tumblr and Twitter interfaces which I find it simple and neat to work with. Well, it's just an excuse for losing my inspiration to edit. Anywho, I'm sorry if I didn't give this beloved dark waifu justice.
+     </p>
+    </section>
+    <!-- Best Friends Section -->
+    <section class="bg-white rounded-lg border border-[#e6e0e9] p-3 text-[10px] text-[#3a3a3a]">
+     <div class="flex justify-between items-center mb-1">
+      <h2 class="font-montserrat font-bold text-xs">
+       Best Friends
+      </h2>
+      <div class="text-[9px] text-[#a88cd9] cursor-pointer select-none">
+       Refresh
+      </div>
+      <div class="text-[9px] text-[#a88cd9] cursor-pointer select-none">
+       View All
+      </div>
+     </div>
+     <ul class="space-y-2">
+      <li class="flex items-center space-x-2">
+       <img alt="Profile picture of Yuyu, anime style character with dark hair" class="w-6 h-6 rounded-full" height="24" src="https://storage.googleapis.com/a1aa/image/9921b393-50f1-4f80-0d44-c81604e41113.jpg" width="24"/>
+       <div class="flex flex-col">
+        <span class="text-[9px] font-semibold text-[#3a3a3a]">
+         Yuyu
+        </span>
+        <span class="text-[8px] text-[#a88cd9]">
+         @mikami
+        </span>
+       </div>
+       <button class="ml-auto text-[8px] text-[#a88cd9] border border-[#a88cd9] rounded px-2 py-[1px] font-semibold hover:bg-[#a88cd9] hover:text-white transition">
+        Follow
+       </button>
+      </li>
+      <li class="flex items-center space-x-2">
+       <img alt="Profile picture of Booneh, anime style character with light hair" class="w-6 h-6 rounded-full" height="24" src="https://storage.googleapis.com/a1aa/image/7531d4d4-ebd0-452c-da9c-c12faefb43f1.jpg" width="24"/>
+       <div class="flex flex-col">
+        <span class="text-[9px] font-semibold text-[#3a3a3a]">
+         Booneh
+        </span>
+        <span class="text-[8px] text-[#a88cd9]">
+         @bunnyama
+        </span>
+       </div>
+       <button class="ml-auto text-[8px] text-[#a88cd9] border border-[#a88cd9] rounded px-2 py-[1px] font-semibold hover:bg-[#a88cd9] hover:text-white transition">
+        Follow
+       </button>
+      </li>
+      <li class="flex items-center space-x-2">
+       <img alt="Profile picture of Nanago, anime style character with dark hair" class="w-6 h-6 rounded-full" height="24" src="https://storage.googleapis.com/a1aa/image/7c2303c4-1532-412a-eac6-6bf0aecaad6d.jpg" width="24"/>
+       <div class="flex flex-col">
+        <span class="text-[9px] font-semibold text-[#3a3a3a]">
+         Nanago
+        </span>
+        <span class="text-[8px] text-[#a88cd9]">
+         @_Nagisa
+        </span>
+       </div>
+       <button class="ml-auto text-[8px] text-[#a88cd9] border border-[#a88cd9] rounded px-2 py-[1px] font-semibold hover:bg-[#a88cd9] hover:text-white transition">
+        Follow
+       </button>
+      </li>
+      <li class="flex items-center space-x-2">
+       <img alt="Profile picture of Merlo, anime style character with light hair" class="w-6 h-6 rounded-full" height="24" src="https://storage.googleapis.com/a1aa/image/b9d79985-a9a4-4f8e-5c46-772470ca145e.jpg" width="24"/>
+       <div class="flex flex-col">
+        <span class="text-[9px] font-semibold text-[#3a3a3a]">
+         Merlo
+        </span>
+        <span class="text-[8px] text-[#a88cd9]">
+         @Dechromado
+        </span>
+       </div>
+       <button class="ml-auto text-[8px] text-[#a88cd9] border border-[#a88cd9] rounded px-2 py-[1px] font-semibold hover:bg-[#a88cd9] hover:text-white transition">
+        Follow
+       </button>
+      </li>
+      <li class="flex items-center space-x-2">
+       <img alt="Profile picture of Galacchi, anime style character with dark hair" class="w-6 h-6 rounded-full" height="24" src="https://storage.googleapis.com/a1aa/image/68a9d027-215e-4987-d7d2-cd690ad2ac61.jpg" width="24"/>
+       <div class="flex flex-col">
+        <span class="text-[9px] font-semibold text-[#3a3a3a]">
+         Galacchi
+        </span>
+        <span class="text-[8px] text-[#a88cd9]">
+         @GalaXyS
+        </span>
+       </div>
+       <button class="ml-auto text-[8px] text-[#a88cd9] border border-[#a88cd9] rounded px-2 py-[1px] font-semibold hover:bg-[#a88cd9] hover:text-white transition">
+        Follow
+       </button>
+      </li>
+      <li class="flex items-center space-x-2">
+       <img alt="Profile picture of Memesa, anime style character with light hair" class="w-6 h-6 rounded-full" height="24" src="https://storage.googleapis.com/a1aa/image/f0f12ca4-8499-4a09-99be-30ddefc032bb.jpg" width="24"/>
+       <div class="flex flex-col">
+        <span class="text-[9px] font-semibold text-[#3a3a3a]">
+         Memesa
+        </span>
+        <span class="text-[8px] text-[#a88cd9]">
+         @qeesia
+        </span>
+       </div>
+       <button class="ml-auto text-[8px] text-[#a88cd9] border border-[#a88cd9] rounded px-2 py-[1px] font-semibold hover:bg-[#a88cd9] hover:text-white transition">
+        Follow
+       </button>
+      </li>
+     </ul>
+    </section>
+    <!-- Current Obsessions Section -->
+    <section class="bg-white rounded-lg border border-[#e6e0e9] p-3 text-[10px] text-[#3a3a3a]">
+     <h2 class="font-montserrat font-bold text-xs mb-1">
+      Current Obsessions
+     </h2>
+     <ul class="space-y-1 text-[#a88cd9]">
+      <li>
+       #GranblueFantasy
+      </li>
+      <li>
+       #Reina
+      </li>
+      <li>
+       #IDOLiSH7
+      </li>
+      <li>
+       #Yoruto Gaku
+      </li>
+      <li>
+       #LoveLive
+      </li>
+      <li>
+       #Meme Xorti
+      </li>
+      <li>
+       #KingdomHearts
+      </li>
+     </ul>
+    </section>
+   </aside>
+   <!-- Right Content -->
+   <section class="flex-1 ml-0 md:ml-8 mt-6 md:mt-0">
+    <!-- Fish Profile Block Start -->
+    <div class="bg-white rounded-lg border border-[#e6e0e9] p-4 mb-6 flex flex-col md:flex-row items-start md:items-center">
+      <div class="flex-1">
+        <div class="flex items-center justify-between mb-2">
+          <h2 class="font-montserrat font-bold text-lg text-[#3a3a3a]">Thông tin cá nhân</h2>
+          <button class="bg-[#a88cd9] text-white text-xs font-semibold rounded px-3 py-1 hover:bg-[#8a6fc1] transition">Edit</button>
+        </div>
+        <div class="flex flex-col md:flex-row gap-4">
+          <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=200&q=80" alt="Ảnh cá lớn" class="w-40 h-40 object-cover rounded-lg border"/>
+          <div class="flex-1 text-xs text-[#3a3a3a] space-y-1">
+            <div><b>Tên khoa học:</b> ...</div>
+            <div><b>Tên thường gọi:</b> ...</div>
+            <div><b>Môi trường sống:</b> ...</div>
+            <div><b>Kích thước:</b> ...</div>
+            <div><b>Nhiệt độ sống:</b> ...</div>
+            <div><b>Độ pH lý tưởng:</b> ...</div>
+          </div>
+        </div>
+        <div class="mt-4 p-2 bg-[#f9f7fa] rounded text-xs text-[#6b6b6b] border border-[#e6e0e9]">Mô tả ngắn gọn / Ghi chú về loài cá này.</div>
+        <div class="mt-3 flex gap-2">
+          <button class="bg-[#a88cd9] text-white text-xs font-semibold rounded px-3 py-1 hover:bg-[#8a6fc1] transition">Chỉnh sửa</button>
+          <button class="bg-[#f87171] text-white text-xs font-semibold rounded px-3 py-1 hover:bg-[#ef4444] transition">Xóa</button>
+          <button class="bg-[#34d399] text-white text-xs font-semibold rounded px-3 py-1 hover:bg-[#059669] transition">Lưu</button>
+        </div>
+      </div>
+    </div>
+    <!-- Fish Profile Block End -->
+    <!-- Navigation Tabs -->
+    <nav class="flex space-x-6 border-b border-[#e6e0e9] mb-4 text-[10px] font-montserrat font-semibold text-[#3a3a3a]">
+      <a id="tab-anime" class="tab-link pb-2 border-b-2 border-[#a88cd9] text-[#a88cd9] cursor-pointer" onclick="showTab('anime')">profile </a>
+      <a id="tab-posts" class="tab-link pb-2 hover:text-[#a88cd9] cursor-pointer" onclick="showTab('posts')">POSTS</a>
+      <a id="tab-anime-list" class="tab-link pb-2 hover:text-[#a88cd9] cursor-pointer" onclick="showTab('anime-list')">ANIME LIST</a>
+      <a id="tab-about" class="tab-link pb-2 hover:text-[#a88cd9] cursor-pointer" onclick="showTab('about')">ABOUT</a>
+      <a id="tab-portfolio" class="tab-link pb-2 hover:text-[#a88cd9] cursor-pointer" onclick="showTab('portfolio')">PORTFOLIO</a>
+      <a id="tab-claims" class="tab-link pb-2 hover:text-[#a88cd9] cursor-pointer" onclick="showTab('claims')">CLAIMS</a>
+    </nav>
+    <!-- Tab Contents -->
+    <div id="tab-content-anime">
+      <h3 class="font-montserrat font-bold text-sm text-[#3a3a3a] mb-4">PROFILE</h3>
+      <div class="flex items-center gap-4 mb-3">
+        <img src="https://storage.googleapis.com/a1aa/image/a5e6353e-55c1-499f-d58f-7c1f15c44857.jpg" alt="Reina avatar" class="w-16 h-16 rounded-full object-cover border-2 border-[#a88cd9] shadow"/>
+        <div>
+          <div class="font-montserrat font-bold text-base text-[#3a3a3a]">Reinabanana</div>
+          <div class="text-xs text-[#a88cd9] font-mono">@Reinasaurus</div>
+          <div class="text-xs text-[#6b6b6b] mt-1">Reina | Female | Gemini | INFP | Ravenclaw<br>Obsessed with Granblue Fantasy, IDOLiSH7, and Love Live! Hungry 24/7. Forever gacha hell slave.</div>
+        </div>
+      </div>
+    </div>
+    <div id="tab-content-posts" style="display:none">
+      <!-- About Me Post -->
+      <article class="bg-white rounded-lg border border-[#e6e0e9] p-4 mb-6 text-[10px] text-[#3a3a3a]">
+       <div class="flex items-start space-x-4">
+        <img alt="Anime girl with long white hair holding a sword, fantasy style" class="w-[120px] h-[120px] rounded-lg object-cover flex-shrink-0" height="120" src="https://storage.googleapis.com/a1aa/image/2a1267d5-d103-46d6-90ac-654c8ec5a39e.jpg" width="120"/>
+        <div class="flex-1">
+          <h4 class="font-montserrat font-bold text-xs mb-1">
+            •• profile 
+          </h4>
+          <!-- Profile Block Start -->
+          <div class="flex items-center gap-4 mb-3">
+            <img src="https://storage.googleapis.com/a1aa/image/a5e6353e-55c1-499f-d58f-7c1f15c44857.jpg" alt="Reina avatar" class="w-16 h-16 rounded-full object-cover border-2 border-[#a88cd9] shadow"/>
+            <div>
+              <div class="font-montserrat font-bold text-base text-[#3a3a3a]">Reinabanana</div>
+              <div class="text-xs text-[#a88cd9] font-mono">@Reinasaurus</div>
+              <div class="text-xs text-[#6b6b6b] mt-1">Reina | Female | Gemini | INFP | Ravenclaw<br>Obsessed with Granblue Fantasy, IDOLiSH7, and Love Live! Hungry 24/7. Forever gacha hell slave.</div>
+            </div>
+          </div>
+          <!-- Profile Block End -->
+          <h4 class="font-montserrat font-bold text-xs mb-1">
+          •• about me
+         </h4>
+         <p class="leading-5 mb-2">
+          Hello! My name is Reina but feel free to call me whatever you like. My given nicknames include
+          <a class="text-[#a88cd9] hover:underline" href="#">
+           Rinchan
+          </a>
+          ,
+          <a class="text-[#a88cd9] hover:underline" href="#">
+           Rainychan
+          </a>
+          ,
+          <a class="text-[#a88cd9] hover:underline" href="#">
+           what-so-ever
+          </a>
+          . I blog candles on my cake every 21st of June. I'm an introvert who prefers indoor activities such as watching anime, playing video games, reading novels, napping, and creating OCs's. I've been in a relationship with my boyfriend for almost six years. Moving on to my personality, I'm not much of a talker in real life but when it comes to my best friends, I can be downright crazy and sort of a troll.
+         </p>
+         <div class="text-[8px] text-[#a88cd9] font-semibold uppercase tracking-widest mb-1 inline-block border border-[#a88cd9] rounded px-2 py-[2px]">
+          POSTED
+         </div>
+         <span class="text-[8px] text-[#6b6b6b]">
+          August 1, 2018 @ 12:00 PM
+         </span>
+         <div class="mt-2 text-[8px] text-[#6b6b6b] flex items-center space-x-2">
+          <i class="far fa-comment">
+          </i>
+          <span>
+           0 notes
+          </span>
+         </div>
+        </div>
+       </div>
+      </article>
+      <!-- Posts List -->
+      <div class="space-y-4">
+       <!-- Post 1 -->
+       <article class="bg-white rounded-lg border border-[#e6e0e9] p-3 flex text-[10px] text-[#3a3a3a]">
+        <img alt="Anime style character Jeanne d'Arc with dark hair and armor" class="w-20 h-20 rounded-lg object-cover flex-shrink-0" height="80" src="https://storage.googleapis.com/a1aa/image/5c70c006-4fcb-4476-b4f0-a9b98e25f4e7.jpg" width="80"/>
+        <div class="ml-3 flex-1">
+         <div class="flex justify-between items-center mb-1">
+          <h4 class="font-montserrat font-bold text-xs">
+           JEANNE D'ARC
+          </h4>
+          <h5 class="text-[8px] text-[#a88cd9]">
+           FALLEN MAIDEN
+          </h5>
+         </div>
+         <ul class="text-[8px] text-[#6b6b6b] space-y-0.5">
+          <li>
+           <span class="font-semibold">
+            Element:
+           </span>
+           Dark
+          </li>
+          <li>
+           <span class="font-semibold">
+            Race:
+           </span>
+           Human
+          </li>
+          <li>
+           <span class="font-semibold">
+            Specialty:
+           </span>
+           Saber
+          </li>
+          <li>
+           <span class="font-semibold">
+            Style:
+           </span>
+           Attain
+          </li>
+         </ul>
+        </div>
+       </article>
+       <!-- Post 2 -->
+       <article class="bg-white rounded-lg border border-[#e6e0e9] p-3 flex text-[10px] text-[#3a3a3a]">
+        <img alt="Anime style character Zoey with dark hair and casual outfit" class="w-20 h-20 rounded-lg object-cover flex-shrink-0" height="80" src="https://storage.googleapis.com/a1aa/image/68820dca-8884-4a1a-feb5-25e15ea25beb.jpg" width="80"/>
+        <div class="ml-3 flex-1">
+         <div class="flex justify-between items-center mb-1">
+          <h4 class="font-montserrat font-bold text-xs">
+           ZOEY
+          </h4>
+          <h5 class="text-[8px] text-[#a88cd9]">
+           ARBITRATOR'S SUMMER HOLIDAY
+          </h5>
+         </div>
+         <ul class="text-[8px] text-[#6b6b6b] space-y-0.5">
+          <li>
+           <span class="font-semibold">
+            Element:
+           </span>
+           Dark
+          </li>
+          <li>
+           <span class="font-semibold">
+            Race:
+           </span>
+           Primal
+          </li>
+          <li>
+           <span class="font-semibold">
+            Specialty:
+           </span>
+           Saber
+          </li>
+          <li>
+           <span class="font-semibold">
+            Style:
+           </span>
+           Special
+          </li>
+         </ul>
+        </div>
+       </article>
+       <!-- Post 3 -->
+       <article class="bg-white rounded-lg border border-[#e6e0e9] p-3 flex text-[10px] text-[#3a3a3a]">
+        <img alt="Anime style character Olivia with dark hair and fantasy outfit" class="w-20 h-20 rounded-lg object-cover flex-shrink-0" height="80" src="https://storage.googleapis.com/a1aa/image/b4246af1-fca1-4ae8-4254-55780facc8ff.jpg" width="80"/>
+        <div class="ml-3 flex-1">
+         <div class="flex justify-between items-center mb-1">
+          <h4 class="font-montserrat font-bold text-xs">
+           OLIVIA
+          </h4>
+          <h5 class="text-[8px] text-[#a88cd9]">
+           DARK ANGEL
+          </h5>
+         </div>
+         <ul class="text-[8px] text-[#6b6b6b] space-y-0.5">
+          <li>
+           <span class="font-semibold">
+            Element:
+           </span>
+           Dark
+          </li>
+         त्र
+
+          <li>
+           <span class="font-semibold">
+            Race:
+           </span>
+           Primal
+          </li>
+          <li>
+           <span class="font-semibold">
+            Specialty:
+           </span>
+           Saber
+          </li>
+          <li>
+           <span class="font-semibold">
+            Style:
+           </span>
+           Special
+          </li>
+         </ul>
+        </div>
+       </article>
+       <!-- Post 4 -->
+       <article class="bg-white rounded-lg border border-[#e6e0e9] p-3 flex text-[10px] text-[#3a3a3a]">
+        <img alt="Anime style character Narmaya with dark hair and fantasy outfit" class="w-20 h-20 rounded-lg object-cover flex-shrink-0" height="80" src="https://storage.googleapis.com/a1aa/image/f446ae33-5169-4b0d-d087-355a1f220035.jpg" width="80"/>
+        <div class="ml-3 flex-1">
+         <div class="flex justify-between items-center mb-1">
+          <h4 class="font-montserrat font-bold text-xs">
+           NARMAYA
+          </h4>
+          <h5 class="text-[8px] text-[#a88cd9]">
+           FLUTTERING SWORDSWOMAN
+          </h5>
+         </div>
+         <ul class="text-[8px] text-[#6b6b6b] space-y-0.5">
+          <li>
+           <span class="font-semibold">
+            Element:
+           </span>
+           Dark
+          </li>
+          <li>
+           <span class="font-semibold">
+            Race:
+           </span>
+           Dragon
+          </li>
+          <li>
+           <span class="font-semibold">
+            Specialty:
+           </span>
+           Katana
+          </li>
+          <li>
+           <span class="font-semibold">
+            Style:
+           </span>
+           Attain
+          </li>
+         </ul>
+        </div>
+       </article>
+       <!-- Post 5 -->
+       <article class="bg-white rounded-lg border border-[#e6e0e9] p-3 flex text-[10px] text-[#3a3a3a]">
+        <img alt="Anime style character Vira with dark hair and fantasy outfit" class="w-20 h-20 rounded-lg object-cover flex-shrink-0" height="80" src="https://storage.googleapis.com/a1aa/image/cf2bb552-7348-4534-c244-1e0b570141af.jpg" width="80"/>
+        <div class="ml-3 flex-1">
+         <div class="flex justify-between items-center mb-1">
+          <h4 class="font-montserrat font-bold text-xs">
+           VIRA
+          </h4>
+          <h5 class="text-[8px] text-[#a88cd9]">
+           LOVE-CRAZED KNIGHT
+          </h5>
+         </div>
+         <ul class="text-[8px] text-[#6b6b6b] space-y-0.5">
+          <li>
+           <span class="font-semibold">
+            Element:
+           </span>
+           Dark
+          </li>
+          <li>
+           <span class="font-semibold">
+            Race:
+           </span>
+           Human
+          </li>
+          <li>
+           <span class="font-semibold">
+            Specialty:
+           </span>
+           Saber
+          </li>
+          <li>
+           <span class="font-semibold">
+            Style:
+           </span>
+           Attain
+          </li>
+         </ul>
+        </div>
+       </article>
+      </div>
+      <!-- Bottom Post Info -->
+      <div class="flex justify-between items-center mt-6 text-[8px] text-[#6b6b6b]">
+       <span>
+        POSTED August 1, 2018 @ 11:35 PM
+       </span>
+       <div class="flex items-center space-x-2">
+        <i class="far fa-heart cursor-pointer">
+        </i>
+        <i class="far fa-comment cursor-pointer">
+        </i>
+        <span>
+         0 notes
+        </span>
+       </div>
+      </div>
+    </div>
+    <div id="tab-content-anime-list" style="display:none">
+      <h3 class="font-montserrat font-bold text-sm text-[#3a3a3a] mb-4">ANIME LIST</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="bg-white rounded-lg border border-[#e6e0e9] p-3 flex items-center">
+          <img src="https://cdn.myanimelist.net/images/anime/13/17405.jpg" alt="Steins;Gate" class="w-16 h-24 object-cover rounded mr-3"/>
+          <div>
+            <div class="font-bold text-xs">Steins;Gate</div>
+            <div class="text-[10px] text-[#a88cd9]">Sci-Fi, Thriller (2011)</div>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg border border-[#e6e0e9] p-3 flex items-center">
+          <img src="https://cdn.myanimelist.net/images/anime/5/73199.jpg" alt="Love Live!" class="w-16 h-24 object-cover rounded mr-3"/>
+          <div>
+            <div class="font-bold text-xs">Love Live! School Idol Project</div>
+            <div class="text-[10px] text-[#a88cd9]">Music, Slice of Life (2013)</div>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg border border-[#e6e0e9] p-3 flex items-center">
+          <img src="https://cdn.myanimelist.net/images/anime/3/67177.jpg" alt="IDOLiSH7" class="w-16 h-24 object-cover rounded mr-3"/>
+          <div>
+            <div class="font-bold text-xs">IDOLiSH7</div>
+            <div class="text-[10px] text-[#a88cd9]">Music, Drama (2018)</div>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg border border-[#e6e0e9] p-3 flex items-center">
+          <img src="https://cdn.myanimelist.net/images/anime/10/78745.jpg" alt="Granblue Fantasy" class="w-16 h-24 object-cover rounded mr-3"/>
+          <div>
+            <div class="font-bold text-xs">Granblue Fantasy The Animation</div>
+            <div class="text-[10px] text-[#a88cd9]">Adventure, Fantasy (2017)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="tab-content-about" style="display:none">
+      <h3 class="font-montserrat font-bold text-sm text-[#3a3a3a] mb-4">ABOUT</h3>
+      <div class="bg-white rounded-lg border border-[#e6e0e9] p-4 text-[10px]">
+        <p><b>Name:</b> Reina</p>
+        <p><b>Birthday:</b> June 21</p>
+        <p><b>MBTI:</b> INFP</p>
+        <p><b>Hogwarts House:</b> Ravenclaw</p>
+        <p><b>Favorite Games:</b> Granblue Fantasy, IDOLiSH7, Love Live!</p>
+        <p><b>Fun Fact:</b> Gacha hell survivor, loves anime, always hungry, loves creating OCs.</p>
+        <p class="mt-2">Hi! I'm Reina, a passionate anime and game fan. I love drawing, collecting merch, and spending hours on gacha games. Let's be friends!</p>
+      </div>
+    </div>
+    <div id="tab-content-portfolio" style="display:none">
+      <h3 class="font-montserrat font-bold text-sm text-[#3a3a3a] mb-4">PORTFOLIO</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="bg-white rounded-lg border border-[#e6e0e9] p-3 flex flex-col items-center">
+          <img src="https://storage.googleapis.com/a1aa/image/a5e6353e-55c1-499f-d58f-7c1f15c44857.jpg" alt="Artwork 1" class="w-24 h-24 object-cover rounded mb-2"/>
+          <div class="font-bold text-xs">Nerimayo - Granblue Fantasy</div>
+          <a href="#" class="text-[10px] text-[#a88cd9] hover:underline">View on DeviantArt</a>
+        </div>
+        <div class="bg-white rounded-lg border border-[#e6e0e9] p-3 flex flex-col items-center">
+          <img src="https://storage.googleapis.com/a1aa/image/2a1267d5-d103-46d6-90ac-654c8ec5a39e.jpg" alt="Artwork 2" class="w-24 h-24 object-cover rounded mb-2"/>
+          <div class="font-bold text-xs">Original Character - Reina</div>
+          <a href="#" class="text-[10px] text-[#a88cd9] hover:underline">View on DeviantArt</a>
+        </div>
+      </div>
+    </div>
+    <div id="tab-content-claims" style="display:none">
+      <h3 class="font-montserrat font-bold text-sm text-[#3a3a3a] mb-4">CLAIMS</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="bg-white rounded-lg border border-[#e6e0e9] p-3 flex items-center">
+          <img src="https://storage.googleapis.com/a1aa/image/f446ae33-5169-4b0d-d087-355a1f220035.jpg" alt="Narmaya" class="w-16 h-16 object-cover rounded mr-3"/>
+          <div>
+            <div class="font-bold text-xs">Narmaya</div>
+            <div class="text-[10px] text-[#a88cd9]">Granblue Fantasy</div>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg border border-[#e6e0e9] p-3 flex items-center">
+          <img src="https://cdn.myanimelist.net/images/anime/5/73199.jpg" alt="Nico Yazawa" class="w-16 h-16 object-cover rounded mr-3"/>
+          <div>
+            <div class="font-bold text-xs">Nico Yazawa</div>
+            <div class="text-[10px] text-[#a88cd9]">Love Live!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+   </section>
+  </main>
+  <script>
+let track_art = document.querySelector(".track-art");
+let track_art_img = document.querySelector(".track-art-img");
+let track_name = document.querySelector(".track-name");
+let track_artist = document.querySelector(".track-artist");
+let playpause_btn = document.querySelector(".playpause-track");
+let next_btn = document.querySelector(".next-track");
+let prev_btn = document.querySelector(".prev-track");
+let seek_slider = document.querySelector(".seek_slider");
+let curr_time = document.querySelector(".current-time");
+let total_duration = document.querySelector(".total-duration");
+let track_index = 0;
+let isPlaying = false;
+let updateTimer;
+let curr_track = document.createElement("audio");
+let track_list = [
+	{
+		name: "Shipping Lanes",
+		artist: "Chad Crouch",
+		image: "https://images.pexels.com/photos/1717969/pexels-photo-1717969.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=250&w=250",
+		path: "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Chad_Crouch/Arps/Chad_Crouch_-_Shipping_Lanes.mp3",
+	},
+	{
+		name: "Night Owl",
+		artist: "Broke For Free",
+		image: "https://images.pexels.com/photos/2264753/pexels-photo-2264753.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=250&w=250",
+		path: "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/WFMU/Broke_For_Free/Directionless_EP/Broke_For_Free_-_01_-_Night_Owl.mp3",
+	},
+	{
+		name: "Enthusiast",
+		artist: "Tours",
+		image: "https://images.pexels.com/photos/3100835/pexels-photo-3100835.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=250&w=250",
+		path: "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Tours/Enthusiast/Tours_-_01_-_Enthusiast.mp3",
+	},
+];
+function loadTrack(track_index) {
+	clearInterval(updateTimer);
+	resetValues();
+	curr_track.src = track_list[track_index].path;
+	curr_track.load();
+	track_art_img.src = track_list[track_index].image;
+	track_name.textContent = track_list[track_index].name;
+	track_artist.textContent = track_list[track_index].artist;
+	track_art_img.classList.add('disk');
+	track_art_img.classList.remove('rotating');
+	updateTimer = setInterval(seekUpdate, 1000);
+	curr_track.addEventListener("ended", nextTrack);
+}
+function resetValues() {
+	curr_time.textContent = "00:00";
+	total_duration.textContent = "00:00";
+	seek_slider.value = 0;
+}
+loadTrack(track_index);
+function playpauseTrack() {
+	if (!isPlaying) playTrack();
+	else pauseTrack();
+}
+function playTrack() {
+	curr_track.play();
+	isPlaying = true;
+	playpause_btn.innerHTML = '<i class="fas fa-pause"></i>';
+	track_art_img.classList.add('rotating');
+}
+function pauseTrack() {
+	curr_track.pause();
+	isPlaying = false;
+	playpause_btn.innerHTML = '<i class="fas fa-play"></i>';
+	track_art_img.classList.remove('rotating');
+}
+function nextTrack() {
+	if (track_index < track_list.length - 1) track_index += 1;
+	else track_index = 0;
+	loadTrack(track_index);
+	playTrack();
+}
+function prevTrack() {
+	if (track_index > 0) track_index -= 1;
+	else track_index = track_list.length - 1;
+	loadTrack(track_index);
+	playTrack();
+}
+function seekTo() {
+	let seekto = curr_track.duration * (seek_slider.value / 100);
+	curr_track.currentTime = seekto;
+}
+function seekUpdate() {
+	let seekPosition = 0;
+	if (!isNaN(curr_track.duration)) {
+		seekPosition = curr_track.currentTime * (100 / curr_track.duration);
+		seek_slider.value = seekPosition;
+		let currentMinutes = Math.floor(curr_track.currentTime / 60);
+		let currentSeconds = Math.floor(
+			curr_track.currentTime - currentMinutes * 60
+		);
+		let durationMinutes = Math.floor(curr_track.duration / 60);
+		let durationSeconds = Math.floor(
+			curr_track.duration - durationMinutes * 60
+		);
+		if (currentSeconds < 10) {
+			currentSeconds = "0" + currentSeconds;
+		}
+		if (durationSeconds < 10) {
+			durationSeconds = "0" + durationSeconds;
+		}
+		if (currentMinutes < 10) {
+			currentMinutes = "0" + currentMinutes;
+		}
+		if (durationMinutes < 10) {
+			durationMinutes = "0" + durationMinutes;
+		}
+		curr_time.textContent = currentMinutes + ":" + currentSeconds;
+		total_duration.textContent = durationMinutes + ":" + durationSeconds;
+	}
+}
+function showTab(tab) {
+  document.getElementById('tab-content-posts').style.display = 'none';
+  document.getElementById('tab-content-anime').style.display = 'none';
+  document.getElementById('tab-content-about').style.display = 'none';
+  document.getElementById('tab-content-portfolio').style.display = 'none';
+  document.getElementById('tab-content-claims').style.display = 'none';
+  document.getElementById('tab-posts').classList.remove('border-b-2','border-[#a88cd9]','text-[#a88cd9]');
+  document.getElementById('tab-anime').classList.remove('border-b-2','border-[#a88cd9]','text-[#a88cd9]');
+  document.getElementById('tab-about').classList.remove('border-b-2','border-[#a88cd9]','text-[#a88cd9]');
+  document.getElementById('tab-portfolio').classList.remove('border-b-2','border-[#a88cd9]','text-[#a88cd9]');
+  document.getElementById('tab-claims').classList.remove('border-b-2','border-[#a88cd9]','text-[#a88cd9]');
+  document.getElementById('tab-content-' + tab).style.display = '';
+  document.getElementById('tab-' + tab).classList.add('border-b-2','border-[#a88cd9]','text-[#a88cd9]');
+}
+window.onload = function() {
+  showTab('anime');
+};
+  </script>
+ </body>
+</html>
